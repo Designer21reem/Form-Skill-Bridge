@@ -234,36 +234,56 @@ function ResultsPage() {
       }
     };
 
-  // 4. تحليل أهمية الشهادات حسب التصنيف
+ // 4. تحليل أهمية الشهادات حسب التصنيف
 const certificationByStatus = {
   student: statusAnalysis.student > 0 
-    ? surveyData
-        .filter(p => p.currentStatus === 'student')
-        .reduce((sum, p) => sum + (Number(p.certificationImportance) || 0), 0) / statusAnalysis.student
+    ? parseFloat(
+        (
+          surveyData
+            .filter(p => p.currentStatus === 'student')
+            .reduce((sum, p) => sum + (Number(p.certificationImportance) || 0), 0) / statusAnalysis.student
+        ).toFixed(3)
+      )
     : 0,
   
   graduate: statusAnalysis.graduate > 0
-    ? surveyData
-        .filter(p => p.currentStatus === 'graduate')
-        .reduce((sum, p) => sum + (Number(p.certificationImportance) || 0), 0) / statusAnalysis.graduate
+    ? parseFloat(
+        (
+          surveyData
+            .filter(p => p.currentStatus === 'graduate')
+            .reduce((sum, p) => sum + (Number(p.certificationImportance) || 0), 0) / statusAnalysis.graduate
+        ).toFixed(3)
+      )
     : 0,
   
   employed: statusAnalysis.employed > 0
-    ? surveyData
-        .filter(p => p.currentStatus === 'employed')
-        .reduce((sum, p) => sum + (Number(p.certificationImportance) || 0), 0) / statusAnalysis.employed
+    ? parseFloat(
+        (
+          surveyData
+            .filter(p => p.currentStatus === 'employed')
+            .reduce((sum, p) => sum + (Number(p.certificationImportance) || 0), 0) / statusAnalysis.employed
+        ).toFixed(3)
+      )
     : 0,
   
   unemployed: statusAnalysis.unemployed > 0
-    ? surveyData
-        .filter(p => p.currentStatus === 'unemployed')
-        .reduce((sum, p) => sum + (Number(p.certificationImportance) || 0), 0) / statusAnalysis.unemployed
+    ? parseFloat(
+        (
+          surveyData
+            .filter(p => p.currentStatus === 'unemployed')
+            .reduce((sum, p) => sum + (Number(p.certificationImportance) || 0), 0) / statusAnalysis.unemployed
+        ).toFixed(3)
+      )
     : 0,
   
   freelancer: statusAnalysis.freelancer > 0
-    ? surveyData
-        .filter(p => p.currentStatus === 'freelancer')
-        .reduce((sum, p) => sum + (Number(p.certificationImportance) || 0), 0) / statusAnalysis.freelancer
+    ? parseFloat(
+        (
+          surveyData
+            .filter(p => p.currentStatus === 'freelancer')
+            .reduce((sum, p) => sum + (Number(p.certificationImportance) || 0), 0) / statusAnalysis.freelancer
+        ).toFixed(3)
+      )
     : 0
 };
 
@@ -517,75 +537,84 @@ const certificationByStatus = {
           </div>
         </div>
 
-        {/* قسم التوصيات الاستراتيجية */}
-        <div className="bg-blue-50 p-6 rounded-lg">
-          <h3 className="text-xl font-semibold mb-4">التوصيات الاستراتيجية</h3>
-          
-          <div className="space-y-4">
-            <div>
-              <h4 className="font-medium">الفئة المستهدفة</h4>
-              <p className="text-gray-700">
-                بناءً على التحليل، نوصي بالتركيز على فئة <span className="font-semibold">
-                  {Object.entries(statusAnalysis).sort((a, b) => b[1] - a[1])[0][0] === 'student' ? 'الطلاب' :
-                  Object.entries(statusAnalysis).sort((a, b) => b[1] - a[1])[0][0] === 'graduate' ? 'الخريجين' :
-                  Object.entries(statusAnalysis).sort((a, b) => b[1] - a[1])[0][0] === 'employed' ? 'الموظفين' :
-                  Object.entries(statusAnalysis).sort((a, b) => b[1] - a[1])[0][0] === 'unemployed' ? 'العاطلين' : 'الفريلانسر'}
-                </span> حيث تمثل النسبة الأكبر من المستخدمين بنسبة {Math.round((Object.entries(statusAnalysis).sort((a, b) => b[1] - a[1])[0][1] / surveyData.length) * 100)}%.
-              </p>
-            </div>
-            
-            <div>
-              <h4 className="font-medium">المحتوى التعليمي</h4>
-              <p className="text-gray-700">
-                نوصي بتطوير محتوى تعليمي في مجال <span className="font-semibold">
-                  {['programming', 'design', 'marketing', 'management', 'soft-skills', 'other']
-                    .map(skill => ({
-                      name: skill,
-                      count: surveyData.filter(p => p.desiredSkills?.includes(skill)).length
-                    }))
-                    .sort((a, b) => b.count - a.count)[0].name === 'programming' ? 'البرمجة' :
-                    ['programming', 'design', 'marketing', 'management', 'soft-skills', 'other']
-                    .map(skill => ({
-                      name: skill,
-                      count: surveyData.filter(p => p.desiredSkills?.includes(skill)).length
-                    }))
-                    .sort((a, b) => b.count - a.count)[0].name === 'design' ? 'التصميم' :
-                    ['programming', 'design', 'marketing', 'management', 'soft-skills', 'other']
-                    .map(skill => ({
-                      name: skill,
-                      count: surveyData.filter(p => p.desiredSkills?.includes(skill)).length
-                    }))
-                    .sort((a, b) => b.count - a.count)[0].name === 'marketing' ? 'التسويق' :
-                    ['programming', 'design', 'marketing', 'management', 'soft-skills', 'other']
-                    .map(skill => ({
-                      name: skill,
-                      count: surveyData.filter(p => p.desiredSkills?.includes(skill)).length
-                    }))
-                    .sort((a, b) => b.count - a.count)[0].name === 'management' ? 'ادارة المشاريع' : 'المهارات الشخصية'}
-                </span> حيث أنها المهارة الأكثر طلباً بين جميع الفئات.
-              </p>
-            </div>
-            
-            <div>
-              <h4 className="font-medium">استراتيجية التسعير</h4>
-              <p className="text-gray-700">
-                {Object.entries(paymentByStatus).reduce((sum, [status, payments]) => sum + payments.free, 0) > 
-                 Object.entries(paymentByStatus).reduce((sum, [status, payments]) => sum + payments.low + payments.medium + payments.high, 0) ?
-                 'نوصي بنموذج Freemium مع مميزات مدفوعة إضافية حيث أن الغالبية تفضل النسخة المجانية.' :
-                 'نوصي بباقات مدفوعة بأسعار تنافسية حيث أن نسبة كبيرة من المستخدمين مستعدون للدفع.'}
-              </p>
-            </div>
-            
-            <div>
-              <h4 className="font-medium">فرص التوظيف</h4>
-              <p className="text-gray-700">
-                {Object.entries(jobOpportunitiesByStatus).reduce((sum, [status, values]) => sum + values.veryImportant, 0) > surveyData.length / 2 ?
-                 'يجب التركيز على توفير فرص توظيف كعامل جذب رئيسي حيث أن الغالبية تعتبره مهم جداً.' :
-                 'يمكن التركيز على الجودة التعليمية كعامل جذب رئيسي مع توفير فرص توظيف كقيمة مضافة.'}
-              </p>
-            </div>
-          </div>
-        </div>
+{/* قسم التوصيات الاستراتيجية */}
+<div className="bg-blue-50 p-6 rounded-lg" dir="rtl">
+  <h3 className="text-xl font-semibold mb-4 text-right">التوصيات الاستراتيجية</h3>
+  
+  <div className="space-y-4 text-right">
+    <div>
+      <h4 className="font-medium">الفئة المستهدفة</h4>
+      <p className="text-gray-700 text-right">
+        بناءً على التحليل، نوصي بالتركيز على فئة <span className="font-semibold">
+          {Object.entries(statusAnalysis).sort((a, b) => b[1] - a[1])[0][0] === 'student' ? 'الطلاب' :
+          Object.entries(statusAnalysis).sort((a, b) => b[1] - a[1])[0][0] === 'graduate' ? 'الخريجين' :
+          Object.entries(statusAnalysis).sort((a, b) => b[1] - a[1])[0][0] === 'employed' ? 'الموظفين' :
+          Object.entries(statusAnalysis).sort((a, b) => b[1] - a[1])[0][0] === 'unemployed' ? 'العاطلين' : 'الفريلانسر'}
+        </span> حيث تمثل النسبة الأكبر من المستخدمين بنسبة {Math.round((Object.entries(statusAnalysis).sort((a, b) => b[1] - a[1])[0][1] / surveyData.length) * 100)}%.
+      </p>
+    </div>
+    
+    <div>
+      <h4 className="font-medium">المحتوى التعليمي</h4>
+      <p className="text-gray-700 text-right">
+        نوصي بتطوير محتوى تعليمي في مجال <span className="font-semibold">
+          {['programming', 'design', 'marketing', 'management', 'soft-skills', 'other']
+            .map(skill => ({
+              name: skill,
+              count: surveyData.filter(p => p.desiredSkills?.includes(skill)).length
+            }))
+            .sort((a, b) => b.count - a.count)[0].name === 'programming' ? 'البرمجة' :
+            ['programming', 'design', 'marketing', 'management', 'soft-skills', 'other']
+            .map(skill => ({
+              name: skill,
+              count: surveyData.filter(p => p.desiredSkills?.includes(skill)).length
+            }))
+            .sort((a, b) => b.count - a.count)[0].name === 'design' ? 'التصميم' :
+            ['programming', 'design', 'marketing', 'management', 'soft-skills', 'other']
+            .map(skill => ({
+              name: skill,
+              count: surveyData.filter(p => p.desiredSkills?.includes(skill)).length
+            }))
+            .sort((a, b) => b.count - a.count)[0].name === 'marketing' ? 'التسويق' :
+            ['programming', 'design', 'marketing', 'management', 'soft-skills', 'other']
+            .map(skill => ({
+              name: skill,
+              count: surveyData.filter(p => p.desiredSkills?.includes(skill)).length
+            }))
+            .sort((a, b) => b.count - a.count)[0].name === 'management' ? 'إدارة المشاريع' : 'المهارات الشخصية'}
+        </span> حيث أنها المهارة الأكثر طلباً بين جميع الفئات.
+      </p>
+    </div>
+    
+    <div>
+      <h4 className="font-medium">استراتيجية التسعير</h4>
+      <p className="text-gray-700 text-right">
+        {Object.entries(paymentByStatus).reduce((sum, [status, payments]) => sum + payments.free, 0) > 
+         Object.entries(paymentByStatus).reduce((sum, [status, payments]) => sum + payments.low + payments.medium + payments.high, 0) ?
+         'نوصي بنموذج Freemium مع مميزات مدفوعة إضافية حيث أن الغالبية تفضل النسخة المجانية.' :
+         'نوصي بباقات مدفوعة بأسعار تنافسية حيث أن نسبة كبيرة من المستخدمين مستعدون للدفع.'}
+      </p>
+    </div>
+    
+    <div>
+      <h4 className="font-medium">فرص التوظيف</h4>
+      <p className="text-gray-700 text-right">
+        {Object.entries(jobOpportunitiesByStatus).reduce((sum, [status, values]) => sum + values.veryImportant, 0) > surveyData.length / 2 ?
+         'يجب التركيز على توفير فرص توظيف كعامل جذب رئيسي حيث أن الغالبية تعتبره مهم جداً.' :
+         'يمكن التركيز على الجودة التعليمية كعامل جذب رئيسي مع توفير فرص توظيف كقيمة مضافة.'}
+      </p>
+    </div>
+
+    <div>
+      <h4 className="font-medium">اكتساب نقاط لتحفيز</h4>
+      <p className="text-gray-700 text-right">
+        {Object.entries(pointsMotivationData).reduce((sum, [status, values]) => sum + values.veryImportant, 0) > surveyData.length / 2 ?
+         'يجب اعتماد ربح نقاط واستبدالها بالكورسات لأنه يعتبر تحفيزاً حسب آراء المستخدمين.' :
+         'يمكن التركيز على الجودة التعليمية كعامل جذب رئيسي مع توفير فرص تعلم كقيمة مضافة.'}
+      </p>
+    </div>
+  </div>
+</div>
       </div>
     );
   };
