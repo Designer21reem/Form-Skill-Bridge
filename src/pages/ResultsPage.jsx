@@ -234,24 +234,38 @@ function ResultsPage() {
       }
     };
 
-    // 4. تحليل أهمية الشهادات حسب التصنيف
-    const certificationByStatus = {
-      student: surveyData
+  // 4. تحليل أهمية الشهادات حسب التصنيف
+const certificationByStatus = {
+  student: statusAnalysis.student > 0 
+    ? surveyData
         .filter(p => p.currentStatus === 'student')
-        .reduce((sum, p) => sum + (p.certificationImportance || 0), 0) / statusAnalysis.student,
-      graduate: surveyData
+        .reduce((sum, p) => sum + (Number(p.certificationImportance) || 0), 0) / statusAnalysis.student
+    : 0,
+  
+  graduate: statusAnalysis.graduate > 0
+    ? surveyData
         .filter(p => p.currentStatus === 'graduate')
-        .reduce((sum, p) => sum + (p.certificationImportance || 0), 0) / statusAnalysis.graduate,
-      employed: surveyData
+        .reduce((sum, p) => sum + (Number(p.certificationImportance) || 0), 0) / statusAnalysis.graduate
+    : 0,
+  
+  employed: statusAnalysis.employed > 0
+    ? surveyData
         .filter(p => p.currentStatus === 'employed')
-        .reduce((sum, p) => sum + (p.certificationImportance || 0), 0) / statusAnalysis.employed,
-      unemployed: surveyData
+        .reduce((sum, p) => sum + (Number(p.certificationImportance) || 0), 0) / statusAnalysis.employed
+    : 0,
+  
+  unemployed: statusAnalysis.unemployed > 0
+    ? surveyData
         .filter(p => p.currentStatus === 'unemployed')
-        .reduce((sum, p) => sum + (p.certificationImportance || 0), 0) / statusAnalysis.unemployed,
-      freelancer: surveyData
+        .reduce((sum, p) => sum + (Number(p.certificationImportance) || 0), 0) / statusAnalysis.unemployed
+    : 0,
+  
+  freelancer: statusAnalysis.freelancer > 0
+    ? surveyData
         .filter(p => p.currentStatus === 'freelancer')
-        .reduce((sum, p) => sum + (p.certificationImportance || 0), 0) / statusAnalysis.freelancer
-    };
+        .reduce((sum, p) => sum + (Number(p.certificationImportance) || 0), 0) / statusAnalysis.freelancer
+    : 0
+};
 
     // 5. تحليل أهمية فرص العمل حسب التصنيف
     const jobOpportunitiesByStatus = {
