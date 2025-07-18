@@ -7,7 +7,7 @@ function SurveyForm() {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
-    governorate: '', // حقل جديد لمحافظة السكن
+    governorate: '',
     currentStatus: '',
     educationGap: '',
     usedPlatforms: '',
@@ -22,8 +22,9 @@ function SurveyForm() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRTL, setIsRTL] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
 
-  // قائمة المحافظات العراقية
   const governorates = [
     { value: 'baghdad', label: 'بغداد' },
     { value: 'basra', label: 'البصرة' },
@@ -48,15 +49,46 @@ function SurveyForm() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    saveSurveyData(formData);
-    setIsModalOpen(true);
+    setIsSubmitting(true);
+    setSubmitError(null);
+    
+    try {
+      const success = await saveSurveyData(formData);
+      if (success) {
+        setIsModalOpen(true);
+        // Reset form after successful submission
+        setFormData({
+          fullName: '',
+          email: '',
+          governorate: '',
+          currentStatus: '',
+          educationGap: '',
+          usedPlatforms: '',
+          certificatesValue: '',
+          desiredSkills: [],
+          certificationImportance: 3,
+          jobOpportunitiesImportance: '',
+          preferredPrice: '',
+          pointsMotivation: '',
+          tryPlatform: ''
+        });
+      } else {
+        setSubmitError(isRTL ? 'حدث خطأ في حفظ البيانات' : 'Error saving data');
+      }
+    } catch (error) {
+      console.error('Submission error:', error);
+      setSubmitError(isRTL ? 'حدث خطأ في إرسال الاستبيان' : 'Error submitting survey');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const toggleLanguage = () => {
-    setIsRTL(!isRTL);
-    document.body.dir = isRTL ? 'ltr' : 'rtl';
+    const newRTL = !isRTL;
+    setIsRTL(newRTL);
+    document.body.dir = newRTL ? 'rtl' : 'ltr';
   };
 
   return (
@@ -67,6 +99,12 @@ function SurveyForm() {
         </h1>
         <LanguageSwitcher isRTL={isRTL} toggleLanguage={toggleLanguage} />
       </div>
+
+      {submitError && (
+        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
+          {submitError}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* الاسم الكامل */}
@@ -471,9 +509,14 @@ function SurveyForm() {
         <div className="border-t pt-6">
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            disabled={isSubmitting}
+            className={`w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            {isRTL ? 'إرسال الاستبيان' : 'Submit Survey'}
+            {isSubmitting ? (
+              isRTL ? 'جاري الإرسال...' : 'Submitting...'
+            ) : (
+              isRTL ? 'إرسال الاستبيان' : 'Submit Survey'
+            )}
           </button>
         </div>
       </form>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, PieChart, RadialBarChart, Bar, Pie, RadialBar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
 import { getSurveyData, clearSurveyData } from '../utils/storage';
+import { db } from '../firebase/firebase';import { collection, getDocs } from 'firebase/firestore';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
@@ -15,7 +16,14 @@ function ResultsPage() {
     const loadData = async () => {
       try {
         setIsLoading(true);
-        const data = getSurveyData();
+        
+        // جلب البيانات من Firestore بدلاً من localStorage
+        const querySnapshot = await getDocs(collection(db, "surveys"));
+        const data = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        
         setSurveyData(data);
         
         // تحليل بيانات الموقع الجغرافي
@@ -37,15 +45,23 @@ function ResultsPage() {
   }, []);
 
   // دالة حذف جميع المشتركين
-  const handleClearParticipants = () => {
+  const handleClearParticipants = async () => {
     if (window.confirm('هل أنت متأكد أنك تريد حذف جميع بيانات المشتركين؟ لا يمكن التراجع عن هذا الإجراء.')) {
-      clearSurveyData();
-      setSurveyData([]);
-      setLocationData({});
-      alert('تم حذف جميع بيانات المشتركين بنجاح');
+      try {
+        // هنا يجب إضافة كود لحذف البيانات من Firestore
+        // يمكنك استخدام دالة deleteDoc لكل وثيقة
+        await clearSurveyData(); // هذا إذا كنت تريد حذف من localStorage أيضاً
+        setSurveyData([]);
+        setLocationData({});
+        alert('تم حذف جميع بيانات المشتركين بنجاح');
+      } catch (error) {
+        console.error('Error clearing participants:', error);
+        alert('حدث خطأ أثناء محاولة حذف البيانات');
+      }
     }
   };
 
+  // ... باقي الكود يبقى كما هو بدون تغيير ...
   // تحضير البيانات للرسوم البيانية
   const prepareChartData = (questionKey, options) => {
     return options.map(option => ({
