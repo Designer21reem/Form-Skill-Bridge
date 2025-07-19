@@ -140,223 +140,266 @@ function ResultsPage() {
   ]);
 
   // تحليل السوق الديناميكي
-  const analyzeMarket = () => {
-    if (surveyData.length === 0) return null;
-
-    // 1. تحليل التصنيفات الوظيفية
-    const statusAnalysis = {
-      student: surveyData.filter(p => p.currentStatus === 'student').length,
-      graduate: surveyData.filter(p => p.currentStatus === 'graduate').length,
-      employed: surveyData.filter(p => p.currentStatus === 'employed').length,
-      unemployed: surveyData.filter(p => p.currentStatus === 'unemployed').length,
-      freelancer: surveyData.filter(p => p.currentStatus === 'freelancer').length
-    };
-
-    // 2. تحليل المهارات حسب التصنيف
-    const skillsByStatus = {
-      student: {
-        programming: surveyData.filter(p => p.currentStatus === 'student' && p.desiredSkills?.includes('programming')).length,
-        design: surveyData.filter(p => p.currentStatus === 'student' && p.desiredSkills?.includes('design')).length,
-        marketing: surveyData.filter(p => p.currentStatus === 'student' && p.desiredSkills?.includes('marketing')).length,
-        management: surveyData.filter(p => p.currentStatus === 'student' && p.desiredSkills?.includes('management')).length,
-        softSkills: surveyData.filter(p => p.currentStatus === 'student' && p.desiredSkills?.includes('soft-skills')).length,
-                other: surveyData.filter(p => p.currentStatus === 'freelancer' && p.desiredSkills?.includes('other')).length
-
-      },
-      graduate: {
-        programming: surveyData.filter(p => p.currentStatus === 'graduate' && p.desiredSkills?.includes('programming')).length,
-        design: surveyData.filter(p => p.currentStatus === 'graduate' && p.desiredSkills?.includes('design')).length,
-        marketing: surveyData.filter(p => p.currentStatus === 'graduate' && p.desiredSkills?.includes('marketing')).length,
-        management: surveyData.filter(p => p.currentStatus === 'graduate' && p.desiredSkills?.includes('management')).length,
-        softSkills: surveyData.filter(p => p.currentStatus === 'graduate' && p.desiredSkills?.includes('soft-skills')).length,
-                other: surveyData.filter(p => p.currentStatus === 'freelancer' && p.desiredSkills?.includes('other')).length
-
-      },
-      employed: {
-        programming: surveyData.filter(p => p.currentStatus === 'employed' && p.desiredSkills?.includes('programming')).length,
-        design: surveyData.filter(p => p.currentStatus === 'employed' && p.desiredSkills?.includes('design')).length,
-        marketing: surveyData.filter(p => p.currentStatus === 'employed' && p.desiredSkills?.includes('marketing')).length,
-        management: surveyData.filter(p => p.currentStatus === 'employed' && p.desiredSkills?.includes('management')).length,
-        softSkills: surveyData.filter(p => p.currentStatus === 'employed' && p.desiredSkills?.includes('soft-skills')).length,
-                other: surveyData.filter(p => p.currentStatus === 'freelancer' && p.desiredSkills?.includes('other')).length
-
-      },
-      unemployed: {
-        programming: surveyData.filter(p => p.currentStatus === 'unemployed' && p.desiredSkills?.includes('programming')).length,
-        design: surveyData.filter(p => p.currentStatus === 'unemployed' && p.desiredSkills?.includes('design')).length,
-        marketing: surveyData.filter(p => p.currentStatus === 'unemployed' && p.desiredSkills?.includes('marketing')).length,
-        management: surveyData.filter(p => p.currentStatus === 'unemployed' && p.desiredSkills?.includes('management')).length,
-        softSkills: surveyData.filter(p => p.currentStatus === 'unemployed' && p.desiredSkills?.includes('soft-skills')).length,
-                other: surveyData.filter(p => p.currentStatus === 'freelancer' && p.desiredSkills?.includes('other')).length
-
-      },
-      freelancer: {
-        programming: surveyData.filter(p => p.currentStatus === 'freelancer' && p.desiredSkills?.includes('programming')).length,
-        design: surveyData.filter(p => p.currentStatus === 'freelancer' && p.desiredSkills?.includes('design')).length,
-        marketing: surveyData.filter(p => p.currentStatus === 'freelancer' && p.desiredSkills?.includes('marketing')).length,
-        management: surveyData.filter(p => p.currentStatus === 'freelancer' && p.desiredSkills?.includes('management')).length,
-        softSkills: surveyData.filter(p => p.currentStatus === 'freelancer' && p.desiredSkills?.includes('soft-skills')).length,
-        other: surveyData.filter(p => p.currentStatus === 'freelancer' && p.desiredSkills?.includes('other')).length
-      }
-    };
-
-    // 3. تحليل استعداد الدفع حسب التصنيف
-    const paymentByStatus = {
-      student: {
-        free: surveyData.filter(p => p.currentStatus === 'student' && p.preferredPrice === 'free').length,
-        low: surveyData.filter(p => p.currentStatus === 'student' && p.preferredPrice === 'less-than-10').length,
-        medium: surveyData.filter(p => p.currentStatus === 'student' && p.preferredPrice === '10-20').length,
-        high: surveyData.filter(p => p.currentStatus === 'student' && p.preferredPrice === 'more-than-20').length
-      },
-      graduate: {
-        free: surveyData.filter(p => p.currentStatus === 'graduate' && p.preferredPrice === 'free').length,
-        low: surveyData.filter(p => p.currentStatus === 'graduate' && p.preferredPrice === 'less-than-10').length,
-        medium: surveyData.filter(p => p.currentStatus === 'graduate' && p.preferredPrice === '10-20').length,
-        high: surveyData.filter(p => p.currentStatus === 'graduate' && p.preferredPrice === 'more-than-20').length
-      },
-      employed: {
-        free: surveyData.filter(p => p.currentStatus === 'employed' && p.preferredPrice === 'free').length,
-        low: surveyData.filter(p => p.currentStatus === 'employed' && p.preferredPrice === 'less-than-10').length,
-        medium: surveyData.filter(p => p.currentStatus === 'employed' && p.preferredPrice === '10-20').length,
-        high: surveyData.filter(p => p.currentStatus === 'employed' && p.preferredPrice === 'more-than-20').length
-      },
-      unemployed: {
-        free: surveyData.filter(p => p.currentStatus === 'unemployed' && p.preferredPrice === 'free').length,
-        low: surveyData.filter(p => p.currentStatus === 'unemployed' && p.preferredPrice === 'less-than-10').length,
-        medium: surveyData.filter(p => p.currentStatus === 'unemployed' && p.preferredPrice === '10-20').length,
-        high: surveyData.filter(p => p.currentStatus === 'unemployed' && p.preferredPrice === 'more-than-20').length
-      },
-      freelancer: {
-        free: surveyData.filter(p => p.currentStatus === 'freelancer' && p.preferredPrice === 'free').length,
-        low: surveyData.filter(p => p.currentStatus === 'freelancer' && p.preferredPrice === 'less-than-10').length,
-        medium: surveyData.filter(p => p.currentStatus === 'freelancer' && p.preferredPrice === '10-20').length,
-        high: surveyData.filter(p => p.currentStatus === 'freelancer' && p.preferredPrice === 'more-than-20').length
-      }
-    };
-
- // 4. تحليل أهمية الشهادات حسب التصنيف
-const certificationByStatus = {
-  student: statusAnalysis.student > 0 
-    ? parseFloat(
-        (
-          surveyData
-            .filter(p => p.currentStatus === 'student')
-            .reduce((sum, p) => sum + (Number(p.certificationImportance) || 0), 0) / statusAnalysis.student
-        ).toFixed(3)
-      )
-    : 0,
-  
-  graduate: statusAnalysis.graduate > 0
-    ? parseFloat(
-        (
-          surveyData
-            .filter(p => p.currentStatus === 'graduate')
-            .reduce((sum, p) => sum + (Number(p.certificationImportance) || 0), 0) / statusAnalysis.graduate
-        ).toFixed(3)
-      )
-    : 0,
-  
-  employed: statusAnalysis.employed > 0
-    ? parseFloat(
-        (
-          surveyData
-            .filter(p => p.currentStatus === 'employed')
-            .reduce((sum, p) => sum + (Number(p.certificationImportance) || 0), 0) / statusAnalysis.employed
-        ).toFixed(3)
-      )
-    : 0,
-  
-  unemployed: statusAnalysis.unemployed > 0
-    ? parseFloat(
-        (
-          surveyData
-            .filter(p => p.currentStatus === 'unemployed')
-            .reduce((sum, p) => sum + (Number(p.certificationImportance) || 0), 0) / statusAnalysis.unemployed
-        ).toFixed(3)
-      )
-    : 0,
-  
-  freelancer: statusAnalysis.freelancer > 0
-    ? parseFloat(
-        (
-          surveyData
-            .filter(p => p.currentStatus === 'freelancer')
-            .reduce((sum, p) => sum + (Number(p.certificationImportance) || 0), 0) / statusAnalysis.freelancer
-        ).toFixed(3)
-      )
-    : 0
-};
-
-    // 5. تحليل أهمية فرص العمل حسب التصنيف
-    const jobOpportunitiesByStatus = {
-      student: {
-        veryImportant: surveyData.filter(p => p.currentStatus === 'student' && p.jobOpportunitiesImportance === 'very-important').length,
-        somewhat: surveyData.filter(p => p.currentStatus === 'student' && p.jobOpportunitiesImportance === 'somewhat').length,
-        notImportant: surveyData.filter(p => p.currentStatus === 'student' && p.jobOpportunitiesImportance === 'not-important').length
-      },
-      graduate: {
-        veryImportant: surveyData.filter(p => p.currentStatus === 'graduate' && p.jobOpportunitiesImportance === 'very-important').length,
-        somewhat: surveyData.filter(p => p.currentStatus === 'graduate' && p.jobOpportunitiesImportance === 'somewhat').length,
-        notImportant: surveyData.filter(p => p.currentStatus === 'graduate' && p.jobOpportunitiesImportance === 'not-important').length
-      },
-      employed: {
-        veryImportant: surveyData.filter(p => p.currentStatus === 'employed' && p.jobOpportunitiesImportance === 'very-important').length,
-        somewhat: surveyData.filter(p => p.currentStatus === 'employed' && p.jobOpportunitiesImportance === 'somewhat').length,
-        notImportant: surveyData.filter(p => p.currentStatus === 'employed' && p.jobOpportunitiesImportance === 'not-important').length
-      },
-      unemployed: {
-        veryImportant: surveyData.filter(p => p.currentStatus === 'unemployed' && p.jobOpportunitiesImportance === 'very-important').length,
-        somewhat: surveyData.filter(p => p.currentStatus === 'unemployed' && p.jobOpportunitiesImportance === 'somewhat').length,
-        notImportant: surveyData.filter(p => p.currentStatus === 'unemployed' && p.jobOpportunitiesImportance === 'not-important').length
-      },
-      freelancer: {
-        veryImportant: surveyData.filter(p => p.currentStatus === 'freelancer' && p.jobOpportunitiesImportance === 'very-important').length,
-        somewhat: surveyData.filter(p => p.currentStatus === 'freelancer' && p.jobOpportunitiesImportance === 'somewhat').length,
-        notImportant: surveyData.filter(p => p.currentStatus === 'freelancer' && p.jobOpportunitiesImportance === 'not-important').length
-      }
-    };
-
+const analyzeMarket = () => {
+  // التحقق من وجود البيانات
+  if (!surveyData || surveyData.length === 0) {
     return (
       <div className="bg-white p-6 rounded-lg shadow-md mb-8">
         <h2 className="text-2xl font-bold mb-6">تحليل السوق الشامل</h2>
-        
-        {/* قسم التصنيفات الوظيفية */}
-        <div className="mb-8">
-          <h3 className="text-xl font-semibold mb-4">التوزيع حسب الحالة الوظيفية</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={Object.entries(statusAnalysis).map(([status, count]) => ({
+        <p className="text-center py-8">لا توجد بيانات متاحة للعرض</p>
+      </div>
+    );
+  }
+
+  // دالة مساعدة لحساب النسبة المئوية الآمنة
+  const safePercentage = (part, total) => {
+    if (isNaN(part) || isNaN(total) || total <= 0) return 0;
+    return Math.round((part / total) * 100);
+  };
+
+  // دالة مساعدة لحساب المتوسط الآمن
+  const safeAverage = (values, count) => {
+    if (count <= 0 || !values || values.length === 0) return 0;
+    const sum = values.reduce((total, num) => total + (Number(num) || 0), 0);
+    return parseFloat((sum / count).toFixed(2));
+  };
+
+  // 1. تحليل التصنيفات الوظيفية
+  const statusAnalysis = {
+    student: surveyData.filter(p => p?.currentStatus === 'student').length,
+    graduate: surveyData.filter(p => p?.currentStatus === 'graduate').length,
+    employed: surveyData.filter(p => p?.currentStatus === 'employed').length,
+    unemployed: surveyData.filter(p => p?.currentStatus === 'unemployed').length,
+    freelancer: surveyData.filter(p => p?.currentStatus === 'freelancer').length
+  };
+
+  // 2. تحليل المهارات حسب التصنيف
+  const skillsByStatus = {
+    student: {
+      programming: surveyData.filter(p => p?.currentStatus === 'student' && p?.desiredSkills?.includes('programming')).length,
+      design: surveyData.filter(p => p?.currentStatus === 'student' && p?.desiredSkills?.includes('design')).length,
+      marketing: surveyData.filter(p => p?.currentStatus === 'student' && p?.desiredSkills?.includes('marketing')).length,
+      management: surveyData.filter(p => p?.currentStatus === 'student' && p?.desiredSkills?.includes('management')).length,
+      softSkills: surveyData.filter(p => p?.currentStatus === 'student' && p?.desiredSkills?.includes('soft-skills')).length,
+      other: surveyData.filter(p => p?.currentStatus === 'student' && p?.desiredSkills?.includes('other')).length
+    },
+    graduate: {
+      programming: surveyData.filter(p => p?.currentStatus === 'graduate' && p?.desiredSkills?.includes('programming')).length,
+      design: surveyData.filter(p => p?.currentStatus === 'graduate' && p?.desiredSkills?.includes('design')).length,
+      marketing: surveyData.filter(p => p?.currentStatus === 'graduate' && p?.desiredSkills?.includes('marketing')).length,
+      management: surveyData.filter(p => p?.currentStatus === 'graduate' && p?.desiredSkills?.includes('management')).length,
+      softSkills: surveyData.filter(p => p?.currentStatus === 'graduate' && p?.desiredSkills?.includes('soft-skills')).length,
+      other: surveyData.filter(p => p?.currentStatus === 'graduate' && p?.desiredSkills?.includes('other')).length
+    },
+    employed: {
+      programming: surveyData.filter(p => p?.currentStatus === 'employed' && p?.desiredSkills?.includes('programming')).length,
+      design: surveyData.filter(p => p?.currentStatus === 'employed' && p?.desiredSkills?.includes('design')).length,
+      marketing: surveyData.filter(p => p?.currentStatus === 'employed' && p?.desiredSkills?.includes('marketing')).length,
+      management: surveyData.filter(p => p?.currentStatus === 'employed' && p?.desiredSkills?.includes('management')).length,
+      softSkills: surveyData.filter(p => p?.currentStatus === 'employed' && p?.desiredSkills?.includes('soft-skills')).length,
+      other: surveyData.filter(p => p?.currentStatus === 'employed' && p?.desiredSkills?.includes('other')).length
+    },
+    unemployed: {
+      programming: surveyData.filter(p => p?.currentStatus === 'unemployed' && p?.desiredSkills?.includes('programming')).length,
+      design: surveyData.filter(p => p?.currentStatus === 'unemployed' && p?.desiredSkills?.includes('design')).length,
+      marketing: surveyData.filter(p => p?.currentStatus === 'unemployed' && p?.desiredSkills?.includes('marketing')).length,
+      management: surveyData.filter(p => p?.currentStatus === 'unemployed' && p?.desiredSkills?.includes('management')).length,
+      softSkills: surveyData.filter(p => p?.currentStatus === 'unemployed' && p?.desiredSkills?.includes('soft-skills')).length,
+      other: surveyData.filter(p => p?.currentStatus === 'unemployed' && p?.desiredSkills?.includes('other')).length
+    },
+    freelancer: {
+      programming: surveyData.filter(p => p?.currentStatus === 'freelancer' && p?.desiredSkills?.includes('programming')).length,
+      design: surveyData.filter(p => p?.currentStatus === 'freelancer' && p?.desiredSkills?.includes('design')).length,
+      marketing: surveyData.filter(p => p?.currentStatus === 'freelancer' && p?.desiredSkills?.includes('marketing')).length,
+      management: surveyData.filter(p => p?.currentStatus === 'freelancer' && p?.desiredSkills?.includes('management')).length,
+      softSkills: surveyData.filter(p => p?.currentStatus === 'freelancer' && p?.desiredSkills?.includes('soft-skills')).length,
+      other: surveyData.filter(p => p?.currentStatus === 'freelancer' && p?.desiredSkills?.includes('other')).length
+    }
+  };
+
+  // 3. تحليل استعداد الدفع حسب التصنيف
+  const paymentByStatus = {
+    student: {
+      free: surveyData.filter(p => p?.currentStatus === 'student' && p?.preferredPrice === 'free').length,
+      low: surveyData.filter(p => p?.currentStatus === 'student' && p?.preferredPrice === 'less-than-10').length,
+      medium: surveyData.filter(p => p?.currentStatus === 'student' && p?.preferredPrice === '10-20').length,
+      high: surveyData.filter(p => p?.currentStatus === 'student' && p?.preferredPrice === 'more-than-20').length
+    },
+    graduate: {
+      free: surveyData.filter(p => p?.currentStatus === 'graduate' && p?.preferredPrice === 'free').length,
+      low: surveyData.filter(p => p?.currentStatus === 'graduate' && p?.preferredPrice === 'less-than-10').length,
+      medium: surveyData.filter(p => p?.currentStatus === 'graduate' && p?.preferredPrice === '10-20').length,
+      high: surveyData.filter(p => p?.currentStatus === 'graduate' && p?.preferredPrice === 'more-than-20').length
+    },
+    employed: {
+      free: surveyData.filter(p => p?.currentStatus === 'employed' && p?.preferredPrice === 'free').length,
+      low: surveyData.filter(p => p?.currentStatus === 'employed' && p?.preferredPrice === 'less-than-10').length,
+      medium: surveyData.filter(p => p?.currentStatus === 'employed' && p?.preferredPrice === '10-20').length,
+      high: surveyData.filter(p => p?.currentStatus === 'employed' && p?.preferredPrice === 'more-than-20').length
+    },
+    unemployed: {
+      free: surveyData.filter(p => p?.currentStatus === 'unemployed' && p?.preferredPrice === 'free').length,
+      low: surveyData.filter(p => p?.currentStatus === 'unemployed' && p?.preferredPrice === 'less-than-10').length,
+      medium: surveyData.filter(p => p?.currentStatus === 'unemployed' && p?.preferredPrice === '10-20').length,
+      high: surveyData.filter(p => p?.currentStatus === 'unemployed' && p?.preferredPrice === 'more-than-20').length
+    },
+    freelancer: {
+      free: surveyData.filter(p => p?.currentStatus === 'freelancer' && p?.preferredPrice === 'free').length,
+      low: surveyData.filter(p => p?.currentStatus === 'freelancer' && p?.preferredPrice === 'less-than-10').length,
+      medium: surveyData.filter(p => p?.currentStatus === 'freelancer' && p?.preferredPrice === '10-20').length,
+      high: surveyData.filter(p => p?.currentStatus === 'freelancer' && p?.preferredPrice === 'more-than-20').length
+    }
+  };
+
+  // 4. تحليل أهمية الشهادات حسب التصنيف
+  const certificationByStatus = {
+    student: safeAverage(
+      surveyData
+        .filter(p => p?.currentStatus === 'student')
+        .map(p => p?.certificationImportance),
+      statusAnalysis.student
+    ),
+    graduate: safeAverage(
+      surveyData
+        .filter(p => p?.currentStatus === 'graduate')
+        .map(p => p?.certificationImportance),
+      statusAnalysis.graduate
+    ),
+    employed: safeAverage(
+      surveyData
+        .filter(p => p?.currentStatus === 'employed')
+        .map(p => p?.certificationImportance),
+      statusAnalysis.employed
+    ),
+    unemployed: safeAverage(
+      surveyData
+        .filter(p => p?.currentStatus === 'unemployed')
+        .map(p => p?.certificationImportance),
+      statusAnalysis.unemployed
+    ),
+    freelancer: safeAverage(
+      surveyData
+        .filter(p => p?.currentStatus === 'freelancer')
+        .map(p => p?.certificationImportance),
+      statusAnalysis.freelancer
+    )
+  };
+
+  // 5. تحليل أهمية فرص العمل حسب التصنيف
+  const jobOpportunitiesByStatus = {
+    student: {
+      veryImportant: surveyData.filter(p => p?.currentStatus === 'student' && p?.jobOpportunitiesImportance === 'very-important').length,
+      somewhat: surveyData.filter(p => p?.currentStatus === 'student' && p?.jobOpportunitiesImportance === 'somewhat').length,
+      notImportant: surveyData.filter(p => p?.currentStatus === 'student' && p?.jobOpportunitiesImportance === 'not-important').length
+    },
+    graduate: {
+      veryImportant: surveyData.filter(p => p?.currentStatus === 'graduate' && p?.jobOpportunitiesImportance === 'very-important').length,
+      somewhat: surveyData.filter(p => p?.currentStatus === 'graduate' && p?.jobOpportunitiesImportance === 'somewhat').length,
+      notImportant: surveyData.filter(p => p?.currentStatus === 'graduate' && p?.jobOpportunitiesImportance === 'not-important').length
+    },
+    employed: {
+      veryImportant: surveyData.filter(p => p?.currentStatus === 'employed' && p?.jobOpportunitiesImportance === 'very-important').length,
+      somewhat: surveyData.filter(p => p?.currentStatus === 'employed' && p?.jobOpportunitiesImportance === 'somewhat').length,
+      notImportant: surveyData.filter(p => p?.currentStatus === 'employed' && p?.jobOpportunitiesImportance === 'not-important').length
+    },
+    unemployed: {
+      veryImportant: surveyData.filter(p => p?.currentStatus === 'unemployed' && p?.jobOpportunitiesImportance === 'very-important').length,
+      somewhat: surveyData.filter(p => p?.currentStatus === 'unemployed' && p?.jobOpportunitiesImportance === 'somewhat').length,
+      notImportant: surveyData.filter(p => p?.currentStatus === 'unemployed' && p?.jobOpportunitiesImportance === 'not-important').length
+    },
+    freelancer: {
+      veryImportant: surveyData.filter(p => p?.currentStatus === 'freelancer' && p?.jobOpportunitiesImportance === 'very-important').length,
+      somewhat: surveyData.filter(p => p?.currentStatus === 'freelancer' && p?.jobOpportunitiesImportance === 'somewhat').length,
+      notImportant: surveyData.filter(p => p?.currentStatus === 'freelancer' && p?.jobOpportunitiesImportance === 'not-important').length
+    }
+  };
+
+  return (
+    <div className="bg-white p-6 rounded-lg shadow-md mb-8">
+      <h2 className="text-2xl font-bold mb-6">تحليل السوق الشامل</h2>
+      
+      {/* قسم التصنيفات الوظيفية */}
+      <div className="mb-8">
+        <h3 className="text-xl font-semibold mb-4">التوزيع حسب الحالة الوظيفية</h3>
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={Object.entries(statusAnalysis)
+                    .filter(([_, count]) => count > 0)
+                    .map(([status, count]) => ({
                       name: status === 'student' ? 'طالب' :
                             status === 'graduate' ? 'خريج' :
                             status === 'employed' ? 'موظف' :
                             status === 'unemployed' ? 'عاطل' : 'فريلانسر',
                       value: count
                     }))}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    label={({ name, percent }) => `${name}: ${Math.round(percent)}%`}
-                    labelLine={false}
-                  >
-                    {Object.keys(statusAnalysis).map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  innerRadius={40}
+                  label={({ name, percent, x, y, cx, cy }) => {
+                    const radius = 80;
+                    const angle = Math.atan2(y - cy, x - cx);
+                    const labelX = cx + (radius + 20) * Math.cos(angle);
+                    const labelY = cy + (radius + 20) * Math.sin(angle);
+                    
+                    return (
+                      <text
+                        x={labelX}
+                        y={labelY}
+                        fill="#333"
+                        textAnchor={x > cx ? 'start' : 'end'}
+                        dominantBaseline="central"
+                        fontSize={12}
+                        fontWeight={500}
+                      >
+                        {`${name}: ${(percent * 100).toFixed(0)}%`}
+                      </text>
+                    );
+                  }}
+                  labelLine={{
+                    stroke: '#888',
+                    strokeWidth: 1
+                  }}
+                >
+                  {Object.entries(statusAnalysis)
+                    .filter(([_, count]) => count > 0)
+                    .map((_, index) => (
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={COLORS[index % COLORS.length]}
+                        stroke="#fff"
+                        strokeWidth={1}
+                      />
                     ))}
-                  </Pie>
-                  <Tooltip formatter={(value, name, props) => [`${value} (${Math.round(props.payload.percent)}%)`, name]} />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-            
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h4 className="font-medium mb-2">النسب المئوية</h4>
-              <ul className="space-y-2">
-                {Object.entries(statusAnalysis)
-                  .sort((a, b) => b[1] - a[1])
-                  .map(([status, count]) => (
+                </Pie>
+                <Tooltip 
+                  formatter={(value, name) => {
+                    const percentage = safePercentage(value, surveyData.length);
+                    return [`${value} (${percentage}%)`, name];
+                  }}
+                />
+                <Legend 
+                  layout="horizontal"
+                  verticalAlign="bottom"
+                  align="center"
+                  wrapperStyle={{ paddingTop: '20px' }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <h4 className="font-medium mb-2">النسب المئوية</h4>
+            <ul className="space-y-2">
+              {Object.entries(statusAnalysis)
+                .filter(([_, count]) => count > 0)
+                .sort((a, b) => b[1] - a[1])
+                .map(([status, count]) => {
+                  const percentage = safePercentage(count, surveyData.length);
+                  return (
                     <li key={status} className="flex justify-between">
                       <span>
                         {status === 'student' ? 'طلاب' :
@@ -365,65 +408,73 @@ const certificationByStatus = {
                          status === 'unemployed' ? 'عاطلون' : 'فريلانسر'}
                       </span>
                       <span className="font-medium">
-                        {count} ({Math.round((count / surveyData.length) * 100)}%)
+                        {count} ({percentage}%)
                       </span>
                     </li>
-                  ))}
-              </ul>
-            </div>
+                  );
+                })}
+            </ul>
           </div>
         </div>
+      
+      </div>
 
-        {/* قسم المهارات حسب التصنيف */}
-        <div className="mb-8">
-          <h3 className="text-xl font-semibold mb-4">المهارات المطلوبة حسب التصنيف</h3>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">المهارة</th>
-                  {Object.keys(statusAnalysis).map(status => (
-                    <th key={status} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      {status === 'student' ? 'طلاب' :
-                       status === 'graduate' ? 'خريجون' :
-                       status === 'employed' ? 'موظفون' :
-                       status === 'unemployed' ? 'عاطلون' : 'فريلانسر'}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {['programming', 'design', 'marketing', 'management', 'soft-skills'].map(skill => (
-                  <tr key={skill}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {skill === 'programming' ? 'برمجة' :
-                       skill === 'design' ? 'تصميم' :
-                       skill === 'marketing' ? 'تسويق' :
-                       skill === 'management' ? 'ادارة المشاريع،' :
-                       skill === 'soft-skills' ? 'مهارات شخصية' : 'غير ذلك'}
-                    </td>
-                    {Object.keys(statusAnalysis).map(status => (
-                      <td key={`${skill}-${status}`} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {skillsByStatus[status][skill === 'soft-skills' ? 'softSkills' : skill]} (
-                        {Math.round((skillsByStatus[status][skill === 'soft-skills' ? 'softSkills' : skill] / statusAnalysis[status]) * 100)}%)
-                      </td>
-                    ))}
-                  </tr>
+      {/* قسم المهارات حسب التصنيف */}
+      <div className="mb-8">
+        <h3 className="text-xl font-semibold mb-4">المهارات المطلوبة حسب التصنيف</h3>
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">المهارة</th>
+                {Object.keys(statusAnalysis).map(status => (
+                  <th key={status} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {status === 'student' ? 'طلاب' :
+                     status === 'graduate' ? 'خريجون' :
+                     status === 'employed' ? 'موظفون' :
+                     status === 'unemployed' ? 'عاطلون' : 'فريلانسر'}
+                  </th>
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {['programming', 'design', 'marketing', 'management', 'soft-skills'].map(skill => (
+                <tr key={skill}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {skill === 'programming' ? 'برمجة' :
+                     skill === 'design' ? 'تصميم' :
+                     skill === 'marketing' ? 'تسويق' :
+                     skill === 'management' ? 'ادارة المشاريع' :
+                     skill === 'soft-skills' ? 'مهارات شخصية' : 'غير ذلك'}
+                  </td>
+                  {Object.keys(statusAnalysis).map(status => {
+                    const skillCount = skillsByStatus[status][skill === 'soft-skills' ? 'softSkills' : skill] || 0;
+                    const totalCount = statusAnalysis[status] || 1;
+                    const percentage = safePercentage(skillCount, totalCount);
+                    return (
+                      <td key={`${skill}-${status}`} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {skillCount} ({percentage}%)
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
+      </div>
 
-        {/* قسم استعداد الدفع حسب التصنيف */}
-        <div className="mb-8">
-          <h3 className="text-xl font-semibold mb-4">استعداد الدفع حسب التصنيف</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h4 className="font-medium mb-2">التوزيع العام</h4>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart
-                  data={Object.keys(statusAnalysis).map(status => ({
+      {/* قسم استعداد الدفع حسب التصنيف */}
+      <div className="mb-8">
+        <h3 className="text-xl font-semibold mb-4">استعداد الدفع حسب التصنيف</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <h4 className="font-medium mb-2">التوزيع العام</h4>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart
+                data={Object.keys(statusAnalysis)
+                  .filter(status => statusAnalysis[status] > 0)
+                  .map(status => ({
                     name: status === 'student' ? 'طلاب' :
                           status === 'graduate' ? 'خريجون' :
                           status === 'employed' ? 'موظفون' :
@@ -433,24 +484,26 @@ const certificationByStatus = {
                     medium: paymentByStatus[status].medium,
                     high: paymentByStatus[status].high
                   }))}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="free" stackId="a" fill="#0088FE" name="مجاني" />
-                  <Bar dataKey="low" stackId="a" fill="#00C49F" name="أقل من $10" />
-                  <Bar dataKey="medium" stackId="a" fill="#FFBB28" name="$10-20" />
-                  <Bar dataKey="high" stackId="a" fill="#FF8042" name="أكثر من $20" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-            
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h4 className="font-medium mb-2">النسب المئوية</h4>
-              <div className="space-y-4">
-                {Object.entries(statusAnalysis).map(([status, count]) => (
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="free" stackId="a" fill="#0088FE" name="مجاني" />
+                <Bar dataKey="low" stackId="a" fill="#00C49F" name="أقل من $10" />
+                <Bar dataKey="medium" stackId="a" fill="#FFBB28" name="$10-20" />
+                <Bar dataKey="high" stackId="a" fill="#FF8042" name="أكثر من $20" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <h4 className="font-medium mb-2">النسب المئوية</h4>
+            <div className="space-y-4">
+              {Object.entries(statusAnalysis)
+                .filter(([_, count]) => count > 0)
+                .map(([status, count]) => (
                   <div key={status}>
                     <h5 className="font-medium">
                       {status === 'student' ? 'الطلاب' :
@@ -461,60 +514,64 @@ const certificationByStatus = {
                     <ul className="space-y-1">
                       <li className="flex justify-between text-sm">
                         <span>مجاني:</span>
-                        <span>{Math.round((paymentByStatus[status].free / count) * 100)}%</span>
+                        <span>{safePercentage(paymentByStatus[status].free, count)}%</span>
                       </li>
                       <li className="flex justify-between text-sm">
                         <span>أقل من $10:</span>
-                        <span>{Math.round((paymentByStatus[status].low / count) * 100)}%</span>
+                        <span>{safePercentage(paymentByStatus[status].low, count)}%</span>
                       </li>
                       <li className="flex justify-between text-sm">
                         <span>$10-20:</span>
-                        <span>{Math.round((paymentByStatus[status].medium / count) * 100)}%</span>
+                        <span>{safePercentage(paymentByStatus[status].medium, count)}%</span>
                       </li>
                       <li className="flex justify-between text-sm">
                         <span>أكثر من $20:</span>
-                        <span>{Math.round((paymentByStatus[status].high / count) * 100)}%</span>
+                        <span>{safePercentage(paymentByStatus[status].high, count)}%</span>
                       </li>
                     </ul>
                   </div>
                 ))}
-              </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* قسم أهمية الشهادات */}
-        <div className="mb-8">
-          <h3 className="text-xl font-semibold mb-4">أهمية الشهادات حسب التصنيف</h3>
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart
-                data={Object.keys(statusAnalysis).map(status => ({
+      {/* قسم أهمية الشهادات */}
+      <div className="mb-8">
+        <h3 className="text-xl font-semibold mb-4">أهمية الشهادات حسب التصنيف</h3>
+        <div className="bg-gray-50 p-4 rounded-lg">
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart
+              data={Object.entries(statusAnalysis)
+                .filter(([_, count]) => count > 0)
+                .map(([status, _]) => ({
                   name: status === 'student' ? 'طلاب' :
                         status === 'graduate' ? 'خريجون' :
                         status === 'employed' ? 'موظفون' :
                         status === 'unemployed' ? 'عاطلون' : 'فريلانسر',
                   importance: certificationByStatus[status]
                 }))}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis domain={[0, 5]} />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="importance" fill="#8884d8" name="متوسط الأهمية (من 5)" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis domain={[0, 5]} />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="importance" fill="#8884d8" name="متوسط الأهمية (من 5)" />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
+      </div>
 
-        {/* قسم أهمية فرص العمل */}
-        <div className="mb-8">
-          <h3 className="text-xl font-semibold mb-4">أهمية فرص العمل حسب التصنيف</h3>
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart
-                data={Object.keys(statusAnalysis).map(status => ({
+      {/* قسم أهمية فرص العمل */}
+      <div className="mb-8">
+        <h3 className="text-xl font-semibold mb-4">أهمية فرص العمل حسب التصنيف</h3>
+        <div className="bg-gray-50 p-4 rounded-lg">
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart
+              data={Object.entries(statusAnalysis)
+                .filter(([_, count]) => count > 0)
+                .map(([status, _]) => ({
                   name: status === 'student' ? 'طلاب' :
                         status === 'graduate' ? 'خريجون' :
                         status === 'employed' ? 'موظفون' :
@@ -523,21 +580,21 @@ const certificationByStatus = {
                   'نوعاً ما': jobOpportunitiesByStatus[status].somewhat,
                   'غير مهم': jobOpportunitiesByStatus[status].notImportant
                 }))}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="مهم جداً" stackId="a" fill="#0088FE" />
-                <Bar dataKey="نوعاً ما" stackId="a" fill="#00C49F" />
-                <Bar dataKey="غير مهم" stackId="a" fill="#FFBB28" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="مهم جداً" stackId="a" fill="#0088FE" />
+              <Bar dataKey="نوعاً ما" stackId="a" fill="#00C49F" />
+              <Bar dataKey="غير مهم" stackId="a" fill="#FFBB28" />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
-
-{/* قسم التوصيات الاستراتيجية */}
+      </div>
+      
+      {/* قسم التوصيات الاستراتيجية */}
 <div className="bg-blue-50 p-6 rounded-lg" dir="rtl">
   <h3 className="text-xl font-semibold mb-4 text-right">التوصيات الاستراتيجية</h3>
   
@@ -609,8 +666,8 @@ const certificationByStatus = {
       <h4 className="font-medium">اكتساب نقاط لتحفيز</h4>
       <p className="text-gray-700 text-right">
         {Object.entries(pointsMotivationData).reduce((sum, [status, values]) => sum + values.veryImportant, 0) > surveyData.length / 2 ?
-         'يجب اعتماد ربح نقاط واستبدالها بالكورسات لأنه يعتبر تحفيزاً حسب آراء المستخدمين.' :
-         'يمكن التركيز على الجودة التعليمية كعامل جذب رئيسي مع توفير فرص تعلم كقيمة مضافة.'}
+         'يجب اعتماد ربح النقاط واستبدالها بالكورسات لأنه يعتبر تحفيزاً حسب آراء المستخدمين.' :
+         'يجب اعتماد ربح النقاط واستبدالها بالكورسات لأنه يعتبر تحفيزاً حسب آراء المستخدمين.'}
       </p>
     </div>
   </div>
